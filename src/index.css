@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* අලුතින් එකතු කරන කොටස */
+
+@layer utilities {
+  /* Chrome, Safari and Opera වල Scrollbar හැංගීම */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* IE, Edge and Firefox වල Scrollbar හැංගීම */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* මුළු පිටුවම Smooth විදියට Scroll වෙන්න */
+html {
+  scroll-behavior: smooth;
+}

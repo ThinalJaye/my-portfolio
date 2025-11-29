@@ -8,10 +8,16 @@ const skills = [
 const TechStack = () => {
   return (
     <section className="py-20 bg-black overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
+      <motion.div 
+        className="max-w-7xl mx-auto px-6 mb-12 text-center"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <p className="text-purple-500 font-medium mb-2">MY SKILLS</p>
         <h2 className="text-3xl md:text-4xl font-bold text-white">Technologies I Work With</h2>
-      </div>
+      </motion.div>
 
       {/* Scrolling Animation */}
       <div className="flex relative w-full overflow-hidden mask-gradient">

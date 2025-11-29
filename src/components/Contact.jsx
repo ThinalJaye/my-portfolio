@@ -51,28 +51,55 @@ const Contact = () => {
         
         {/* --- LEFT SIDE: Contact Info (Left Aligned) --- */}
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-left"
         >
-          <p className="text-purple-500 font-medium mb-4 tracking-wider uppercase text-sm">Get in Touch</p>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Let's work <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
-              together.
-            </span>
-          </h2>
-          <p className="text-gray-400 text-lg mb-10 leading-relaxed max-w-lg">
-            Have a project in mind or just want to say hi? Fill out the form, and I'll get back to you as soon as possible.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <p className="text-purple-500 font-medium mb-4 tracking-wider uppercase text-sm">Get in Touch</p>
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              Let's work <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+                together.
+              </span>
+            </h2>
+            <p className="text-gray-400 text-lg mb-10 leading-relaxed max-w-lg">
+              Have a project in mind or just want to say hi? Fill out the form, and I'll get back to you as soon as possible.
+            </p>
+          </motion.div>
 
           {/* Contact Details (Vertical List for Left Align) */}
-          <div className="space-y-6 mb-12">
+          <motion.div 
+            className="space-y-6 mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.3
+                }
+              }
+            }}
+          >
             
             {/* Email */}
-            <div className="flex items-center gap-5">
+            <motion.div 
+              className="flex items-center gap-5"
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-purple-400 border border-gray-800 shrink-0">
                 <Mail size={20} />
               </div>
@@ -80,10 +107,16 @@ const Contact = () => {
                 <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
                 <a href="mailto:thinaljaye5621@gmail.com" className="font-semibold text-lg hover:text-white transition-colors">thinaljaye5621@gmail.com</a>
               </div>
-            </div>
+            </motion.div>
 
             {/* WhatsApp */}
-            <div className="flex items-center gap-5">
+            <motion.div 
+              className="flex items-center gap-5"
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-green-500 border border-gray-800 shrink-0">
                 <FaWhatsapp size={22} />
               </div>
@@ -91,10 +124,16 @@ const Contact = () => {
                 <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">WhatsApp</p>
                 <a href="https://wa.me/94718731798" target="_blank" rel="noopener noreferrer" className="font-semibold text-lg hover:text-white transition-colors">+94 71 873 1798</a>
               </div>
-            </div>
+            </motion.div>
             
             {/* Location */}
-            <div className="flex items-center gap-5">
+            <motion.div 
+              className="flex items-center gap-5"
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center text-purple-400 border border-gray-800 shrink-0">
                 <MapPin size={20} />
               </div>
@@ -102,24 +141,30 @@ const Contact = () => {
                 <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Location</p>
                 <p className="font-semibold text-lg">Sri Lanka</p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Social Icons (Left Aligned) */}
-          <div className="flex gap-5">
-             <a href="#" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Github size={20} /></a>
-             <a href="#" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Linkedin size={20} /></a>
-             <a href="#" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Facebook size={20} /></a>
-          </div>
+          <motion.div 
+            className="flex gap-5"
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+          >
+             <a href="https://github.com/ThinalJaye" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Github size={20} /></a>
+             <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Linkedin size={20} /></a>
+             <a href="https://web.facebook.com/thinalk.jayamanna.9/about" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Facebook size={20} /></a>
+          </motion.div>
         </motion.div>
 
 
         {/* --- RIGHT SIDE: THE FORM (Compact) --- */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
           className="w-full max-w-lg bg-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-800 relative overflow-hidden shadow-2xl ml-auto"
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-purple-500"></div>
@@ -185,7 +230,13 @@ const Contact = () => {
       </div>
 
       {/* Footer Bottom */}
-      <div className="mt-24 border-t border-gray-900 pt-6 text-center text-gray-600 text-xs flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-6">
+      <motion.div 
+        className="mt-24 border-t border-gray-900 pt-6 text-center text-gray-600 text-xs flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-6"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <p>© 2025 Thinal Jayamanna. All rights reserved.</p>
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -193,7 +244,7 @@ const Contact = () => {
         >
           Back to Top <ArrowUp size={14} />
         </button>
-      </div>
+      </motion.div>
 
     </section>
   );

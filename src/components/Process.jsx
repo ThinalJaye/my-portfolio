@@ -60,7 +60,13 @@ const Process = () => {
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-20">
+        <motion.div 
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
            <p className="text-orange-500 font-medium mb-3 tracking-widest uppercase"></p>
            <h2 className="text-4xl md:text-5xl font-bold mb-4">
              Development <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Process</span>
@@ -68,7 +74,7 @@ const Process = () => {
            <p className="text-gray-400 max-w-2xl mx-auto">
              A proven methodology that ensures quality, efficiency, and client satisfaction at every stage of the project lifecycle.
            </p>
-        </div>
+        </motion.div>
 
         {/* TIMELINE CONTAINER */}
         <div className="relative">
@@ -81,10 +87,10 @@ const Process = () => {
             {steps.map((step, index) => (
               <motion.div 
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.3 }}
                 className={`relative flex items-center md:justify-between ${
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
@@ -117,7 +123,13 @@ const Process = () => {
         </div>
 
         {/* CTA Button at the Bottom */}
-        <div className="mt-20 text-center">
+        <motion.div 
+          className="mt-20 text-center"
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+        >
           <motion.a 
             href="#contact"
             whileHover={{ scale: 1.05 }}
@@ -126,7 +138,7 @@ const Process = () => {
           >
             Start Your Project <ArrowRight size={20} />
           </motion.a>
-        </div>
+        </motion.div>
 
       </div>
     </section>
