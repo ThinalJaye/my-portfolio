@@ -24,13 +24,9 @@ const About = () => {
             {/* Subtle Glow Behind Image (Optional) */}
             <div className="absolute inset-0 bg-purple-600/20 rounded-full blur-3xl opacity-50 group-hover:opacity-75 transition duration-500"></div>
             
-            {/* The Image Itself */}
-            {/* IMPORTANT: 
-               1. ඔයාගේ පින්තූරේ නම හරියටම මෙතනට දාන්න. (ex: /my-photo.png)
-               2. 'mask-image-bottom' පාවිච්චි කළා යට කොටස ලස්සනට fade වෙන්න.
-            */}
+          
             <img 
-              src="about-photo.png" // ඔයාගේ photo එක මෙතනට දාන්න
+              src="about-photo.png" 
               alt="Thinal Jayamanna" 
               className="relative w-full h-auto object-contain drop-shadow-2xl grayscale hover:grayscale-0 transition-all duration-700 mask-image-linear-gradient"
               style={{
@@ -66,11 +62,11 @@ const About = () => {
             </h2>
             
             <p className="text-gray-400 text-lg leading-relaxed mb-6">
-              I am a **Software Engineering Undergraduate** at **SLTC Research University** with a passion for building secure and scalable digital solutions. 
+              I am a Software Engineering Undergraduate at SLTC Research University with a passion for building secure and scalable digital solutions. 
             </p>
             
             <p className="text-gray-400 text-lg leading-relaxed">
-              My journey involves a unique blend of **Full Stack Development** and **Creative Content Creation**. I don't just write code; I tell stories through technology.
+              My journey involves a unique blend of front-End Development and Creative Content Creation. I don't just write code; I tell stories through technology.
             </p>
           </motion.div>
 
