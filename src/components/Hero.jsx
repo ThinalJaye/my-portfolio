@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mail, ArrowRight, Github, Linkedin, Facebook, ChevronDown, Download } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 
 // Brand Icons
@@ -9,7 +9,23 @@ import { SiTypescript, SiMysql, SiMongodb, SiJavascript, SiGraphql } from "react
 
 const Hero = () => {
   
-  // Stars Generation
+  // --- MOUSE ANIMATION SETUP (SMOOTH SPRING PHYSICS) ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Spring config for smooth fluid movement
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 }; 
+  
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  // --- STARS ---
   const stars = [...Array(50)].map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
@@ -36,23 +52,15 @@ const Hero = () => {
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
   };
 
-  // --- UPDATED ICON POSITIONS (Even Closer / Tighter Cluster) ---
   const iconConfigs = [
-    // Top
     { Icon: FaReact, color: "cyan", size: 28, position: { top: "10%", left: "25%" }, depth: "close", delay: 0 },
     { Icon: FaJava, color: "red", size: 24, position: { top: "12%", right: "30%" }, depth: "far", delay: 0.5 },
-    
-    // Right Side
     { Icon: FaNodeJs, color: "green", size: 32, position: { top: "30%", right: "10%" }, depth: "close", delay: 0.2 },
     { Icon: FaPython, color: "blue", size: 26, position: { top: "55%", right: "5%" }, depth: "medium", delay: 0.8 },
     { Icon: FaDocker, color: "blue", size: 30, position: { bottom: "20%", right: "12%" }, depth: "close", delay: 0.3 },
-    
-    // Bottom
     { Icon: FaPhp, color: "indigo", size: 22, position: { bottom: "10%", right: "35%" }, depth: "far", delay: 0.7 },
-    { Icon: SiTypescript, color: "blue", size: 20, position: { bottom: "5%", right: "50%" }, depth: "far", delay: 0.4 }, // Centered bottom
+    { Icon: SiTypescript, color: "blue", size: 20, position: { bottom: "5%", right: "50%" }, depth: "far", delay: 0.4 }, 
     { Icon: SiMysql, color: "blue", size: 28, position: { bottom: "10%", left: "35%" }, depth: "medium", delay: 0.6 },
-    
-    // Left Side
     { Icon: SiMongodb, color: "green", size: 26, position: { bottom: "20%", left: "15%" }, depth: "medium", delay: 0.9 },
     { Icon: SiJavascript, color: "yellow", size: 32, position: { bottom: "40%", left: "8%" }, depth: "close", delay: 0.1 },
     { Icon: SiGraphql, color: "pink", size: 24, position: { top: "35%", left: "10%" }, depth: "far", delay: 0.5 },
@@ -60,9 +68,40 @@ const Hero = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white flex flex-col relative overflow-hidden">
+    <div 
+      className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white flex flex-col relative overflow-hidden group"
+      onMouseMove={handleMouseMove}
+    >
       
-      {/* Starry Background */}
+      {/* --- SMOOTH MOUSE SPOTLIGHT (No Grid) --- */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-500 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              600px circle at ${smoothX}px ${smoothY}px,
+              rgba(139, 92, 246, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      
+      {/* Brighter Center Spot */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-500 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              300px circle at ${smoothX}px ${smoothY}px,
+              rgba(56, 189, 248, 0.2),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {/* Stars Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
           <motion.div
@@ -85,11 +124,11 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Gradients */}
+      {/* Existing Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-      {/* Navbar */}
+      {/* Navbar Section */}
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -172,7 +211,6 @@ const Hero = () => {
             >
               Let's Talk <ArrowRight size={18} />
             </motion.a>
-            
             <div className="flex gap-4">
                <motion.a whileHover={{ y: -5 }} href="https://github.com/ThinalJaye" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Github size={20} /></motion.a>
                <motion.a whileHover={{ y: -5 }} href="https://www.linkedin.com/in/thinal-jayamanna" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Linkedin size={20} /></motion.a>
@@ -200,7 +238,6 @@ const Hero = () => {
                />
             </div>
 
-            {/* --- ICONS EVEN CLOSER (TIGHT CLUSTER) --- */}
             {iconConfigs.map((config, index) => {
               const { Icon, color, size, position, depth, delay } = config;
               

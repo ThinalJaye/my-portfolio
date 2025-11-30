@@ -2,22 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* අලුතින් එකතු කරන කොටස */
-
 @layer utilities {
-  /* Chrome, Safari and Opera වල Scrollbar හැංගීම */
+  /* Scrollbar හංගන්න ඕන නම් විතරක් මේක තියන්න */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  /* IE, Edge and Firefox වල Scrollbar හැංගීම */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-/* මුළු පිටුවම Smooth විදියට Scroll වෙන්න */
-html {
-  scroll-behavior: smooth;
+/* වැදගත්: Default smooth scroll එක අයින් කරන්න ඕනේ Lenis වැඩ කරන්න නම් */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
