@@ -11,7 +11,7 @@ const TechStack = () => {
       <motion.div 
         className="max-w-7xl mx-auto px-6 mb-12 text-center"
         initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 30, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Code, Smartphone, Palette, Video, Layers, Globe } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Code, Smartphone, Palette, Video } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const services = [
@@ -25,29 +25,79 @@ const services = [
   }
 ];
 
+// --- RGB GLOW CARD COMPONENT ---
+const ServiceCard = ({ service, index }) => {
+  const divRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e) => {
+    if (!divRef.current) return;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleMouseEnter = () => setOpacity(1);
+  const handleMouseLeave = () => setOpacity(0);
+
+  return (
+    <motion.div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative h-full rounded-2xl border border-gray-800 bg-gray-900 p-[2px] overflow-hidden group"
+    >
+      {/* --- RGB SPOTLIGHT GLOW --- */}
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-2xl z-10"
+        style={{
+          opacity,
+          // මෙන්න මෙතන තමයි RGB පාට 3 මිශ්‍ර කරලා තියෙන්නේ (Cyan -> Purple -> Pink)
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(56, 189, 248, 0.8), rgba(168, 85, 247, 0.8), rgba(236, 72, 153, 0.8), transparent 50%)`,
+        }}
+      />
+      
+      {/* INNER CONTENT */}
+      <div className="relative h-full rounded-[14px] bg-[#0a0a0a] p-8 flex flex-col justify-between z-20 h-full">
+        
+        {/* Inner Colorful Blob (Subtle background) */}
+        <div className="absolute top-0 right-0 -mr-3 -mt-3 w-24 h-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        <div>
+          {/* Icon Container */}
+          <div className="w-16 h-16 bg-gray-900/80 rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-white transition-all duration-500 mb-6 shadow-lg border border-gray-800 group-hover:border-gray-600 group-hover:scale-110 relative overflow-hidden">
+            {/* Icon Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+                {service.icon}
+            </div>
+          </div>
+          
+          <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-400 transition-all duration-300">
+            {service.title}
+          </h3>
+          
+          <p className="text-gray-400 text-base leading-relaxed group-hover:text-gray-300 transition-colors">
+            {service.desc}
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Services = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
-
   return (
     <section id="services" className="py-24 bg-black text-white px-6">
       <div className="max-w-7xl mx-auto">
+        
+        {/* Header */}
         <motion.div 
           className="text-center mb-16"
           initial={{ opacity: 0, y: 60 }}
@@ -59,29 +109,12 @@ const Services = () => {
            <h2 className="text-4xl md:text-5xl font-bold">My Services</h2>
         </motion.div>
 
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
-            <motion.div 
-              key={index} 
-              variants={itemVariants}
-              className="group p-8 bg-gray-900/50 rounded-2xl border border-gray-800 hover:border-purple-500/50 hover:bg-gray-900 transition-all duration-300 hover:-translate-y-2"
-            >
-              <div className="w-14 h-14 bg-gray-800 rounded-lg flex items-center justify-center text-purple-400 group-hover:text-white group-hover:bg-purple-600 transition-colors mb-6">
-                {service.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                {service.desc}
-              </p>
-            </motion.div>
+            <ServiceCard key={index} service={service} index={index} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -10,6 +10,7 @@ import Process from './components/Process';
 import Projects from './components/Projects';
 import About from './components/About';
 import Contact from './components/Contact';
+import Footer from './components/Footer'; // 1. Footer එක Import කළා
 
 // Animation Component
 import RevealOnScroll from './components/RevealOnScroll';
@@ -44,7 +45,7 @@ function App() {
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-purple-500 selection:text-white">
       
-      {/* Hero Section (No Reveal needed as it's first) */}
+      {/* Hero Section */}
       <section id="home">
         <Hero />
       </section>
@@ -90,6 +91,9 @@ function App() {
           <Contact />
         </RevealOnScroll>
       </section>
+
+      {/* 2. Footer Section (අන්තිමටම එකතු කළා) */}
+      <Footer />
 
     </div>
   );

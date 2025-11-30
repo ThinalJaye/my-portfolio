@@ -1,21 +1,108 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, ArrowRight, Github, Linkedin, Facebook, ChevronDown, Download } from 'lucide-react';
-import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, useSpring, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+import { clsx } from "clsx"; 
+import { twMerge } from "tailwind-merge";
 
 // Brand Icons
 import { FaReact, FaJava, FaNodeJs, FaPython, FaDocker, FaPhp, FaLaravel } from "react-icons/fa";
 import { SiTypescript, SiMysql, SiMongodb, SiJavascript, SiGraphql } from "react-icons/si";
 
+// --- UTILS ---
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+// --- NAVBAR COMPONENT ---
+function Navbar() {
+  const [active, setActive] = useState(null);
+  const navItems = ['Home', 'Projects', 'Services', 'Skills', 'Process', 'About', 'Contact'];
+
+  // --- SCROLL LOGIC ---
+  const { scrollY } = useScroll();
+  const sideOpacity = useTransform(scrollY, [0, 100], [1, 0]);
+  const sidePointerEvents = useTransform(scrollY, (y) => (y > 100 ? "none" : "auto"));
+  const sideY = useTransform(scrollY, [0, 100], [0, -20]);
+
+  return (
+    <div className="fixed top-6 inset-x-0 z-50 px-4 md:px-8 flex justify-center pointer-events-none">
+      <nav className="w-full max-w-7xl flex items-center justify-between">
+        
+        {/* PART 1: LEFT - Email Section */}
+        <motion.div 
+          style={{ opacity: sideOpacity, y: sideY, pointerEvents: sidePointerEvents }}
+          className="hidden lg:flex items-center gap-3 group cursor-pointer pointer-events-auto"
+        >
+          <div className="w-10 h-10 rounded-full border border-white/20 bg-black/40 backdrop-blur-md flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/40 transition-all duration-300">
+            <Mail size={16} className="text-gray-300 group-hover:text-white" />
+          </div>
+          <a href="mailto:thinaljaye5621@gmail.com" className="text-gray-300 font-medium text-sm tracking-wide hover:text-white transition-colors drop-shadow-md">
+            thinaljaye5621@gmail.com
+          </a>
+        </motion.div>
+        
+        <div className="lg:hidden"></div>
+
+        {/* PART 2: CENTER - Navigation Links with "LAWATA" (Subtle) RGB EFFECT */}
+        <div className="hidden md:block pointer-events-auto relative z-50">
+            {/* Border padding set to 1.5px for a fine line */}
+            <div className="relative p-[1.5px] rounded-full overflow-hidden">
+                
+                {/* UPDATES HERE:
+                   - opacity-30: Increased slightly so it shows "tikak lawata" (visible but soft).
+                   - blur-[8px]: Keeps the glow smooth.
+                   - animate-[spin_8s...]: Smooth rotation.
+                */}
+                <div className="absolute inset-[-100%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FF0000_0%,#FFFF00_17%,#00FF00_33%,#00FFFF_50%,#0000FF_67%,#FF00FF_83%,#FF0000_100%)] opacity-30 blur-[8px]" />
+
+                {/* Inner Menu */}
+                <ul className="relative h-full w-full bg-black/80 backdrop-blur-2xl rounded-full flex items-center gap-1 px-3 py-2">
+                    {navItems.map((item) => (
+                        <li key={item}>
+                        <a 
+                            href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
+                            onMouseEnter={() => setActive(item)}
+                            onMouseLeave={() => setActive(null)}
+                            className="relative px-5 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors block"
+                        >
+                            <span className="relative z-10">{item}</span>
+                            {active === item && (
+                            <motion.div
+                                layoutId="active-nav"
+                                className="absolute inset-0 bg-white/10 rounded-full"
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            />
+                            )}
+                        </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+
+        {/* PART 3: RIGHT - Download CV Button */}
+        <motion.a
+          style={{ opacity: sideOpacity, y: sideY, pointerEvents: sidePointerEvents }}
+          href="/cv.pdf"
+          download="Thinal_Jayamanna_CV.pdf"
+          className="pointer-events-auto group flex items-center gap-2 px-6 py-3 bg-[#1e2330] border border-orange-500/30 rounded-full text-sm font-bold text-[#f97316] hover:bg-[#f97316] hover:text-white hover:border-transparent transition-colors duration-300 shadow-lg shadow-orange-900/10 backdrop-blur-md"
+        >
+           <Download size={16} className="group-hover:scale-110 transition-transform" />
+           <span>Download CV</span>
+        </motion.a>
+
+      </nav>
+    </div>
+  );
+}
+
 const Hero = () => {
-  
-  // --- MOUSE ANIMATION SETUP (SMOOTH SPRING PHYSICS) ---
+  // --- MOUSE ANIMATION SETUP ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Spring config for smooth fluid movement
-  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 }; 
-  
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
@@ -24,8 +111,8 @@ const Hero = () => {
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   }
-
-  // --- STARS ---
+  
+  // Stars Generation
   const stars = [...Array(50)].map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
@@ -52,6 +139,7 @@ const Hero = () => {
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
   };
 
+  // --- ICON POSITIONS ---
   const iconConfigs = [
     { Icon: FaReact, color: "cyan", size: 28, position: { top: "10%", left: "25%" }, depth: "close", delay: 0 },
     { Icon: FaJava, color: "red", size: 24, position: { top: "12%", right: "30%" }, depth: "far", delay: 0.5 },
@@ -73,47 +161,37 @@ const Hero = () => {
       onMouseMove={handleMouseMove}
     >
       
-      {/* --- SMOOTH MOUSE SPOTLIGHT (No Grid) --- */}
+      {/* --- MOUSE SPOTLIGHT EFFECT --- */}
       <motion.div
         className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
-            radial-gradient(
-              600px circle at ${smoothX}px ${smoothY}px,
-              rgba(139, 92, 246, 0.15),
-              transparent 80%
-            )
-          `,
-        }}
-      />
-      
-      {/* Brighter Center Spot */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-500 group-hover:opacity-100"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              300px circle at ${smoothX}px ${smoothY}px,
-              rgba(56, 189, 248, 0.2),
-              transparent 80%
-            )
-          `,
+              radial-gradient(
+                600px circle at ${smoothX}px ${smoothY}px,
+                rgba(139, 92, 246, 0.15),
+                transparent 80%
+              )
+            `,
         }}
       />
 
-      {/* Stars Layer */}
+      {/* --- BRIGHTER STARS LAYER --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
           <motion.div
             key={star.id}
-            className="absolute bg-white rounded-full opacity-20"
+            className="absolute bg-white rounded-full"
             style={{
               top: star.top,
               left: star.left,
               width: `${star.size}px`,
               height: `${star.size}px`,
+              boxShadow: '0 0 6px 1px rgba(255, 255, 255, 0.6)'
             }}
-            animate={{ opacity: [0.1, 0.8, 0.1] }}
+            animate={{ 
+              opacity: [0.3, 1, 0.3], 
+              scale: [1, 1.2, 1] 
+            }}
             transition={{
               duration: star.duration,
               repeat: Infinity,
@@ -124,48 +202,15 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Existing Gradients */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px] pointer-events-none z-0"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      {/* --- DARK GRADIENTS --- */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-      {/* Navbar Section */}
-      <motion.nav 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="w-full max-w-7xl mx-auto px-6 md:px-12 py-6 flex justify-between items-center z-50 relative"
-      >
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-            <Mail size={18} />
-          </div>
-          <a href="mailto:thinaljaye5621@gmail.com" className="text-sm font-medium text-gray-300 hover:text-white transition-colors hidden sm:block">
-            thinaljaye5621@gmail.com
-          </a>
-        </div>
-
-        <ul className="hidden lg:flex items-center gap-8 text-sm font-medium text-gray-400">
-          {['Projects', 'Services', 'Skills', 'Process', 'About', 'Contact'].map((item) => (
-            <li key={item}>
-              <a href={`#${item.toLowerCase()}`} className="hover:text-white hover:scale-105 transition-all duration-300">
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <a 
-          href="/cv.pdf" 
-          download="Thinal_Jayamanna_CV.pdf" 
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] border border-orange-500/30 text-orange-500 rounded-lg text-sm font-bold hover:bg-orange-500 hover:text-white hover:border-transparent transition-all duration-300 shadow-lg shadow-orange-500/10"
-        >
-           <Download size={18} />
-           Download CV
-        </a>
-      </motion.nav>
+      {/* --- NAVBAR --- */}
+      <Navbar />
 
       {/* Main Content */}
-      <main className="flex-grow w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+      <main className="flex-grow w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10 pt-24 md:pt-0">
         
         {/* LEFT SIDE */}
         <motion.div 
@@ -211,6 +256,7 @@ const Hero = () => {
             >
               Let's Talk <ArrowRight size={18} />
             </motion.a>
+            
             <div className="flex gap-4">
                <motion.a whileHover={{ y: -5 }} href="https://github.com/ThinalJaye" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Github size={20} /></motion.a>
                <motion.a whileHover={{ y: -5 }} href="https://www.linkedin.com/in/thinal-jayamanna" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Linkedin size={20} /></motion.a>
