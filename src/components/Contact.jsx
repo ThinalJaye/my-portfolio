@@ -79,11 +79,7 @@ const Contact = () => {
             </div>
 
             {/* Social Icons */}
-            <div className="flex gap-5">
-              <a href="https://github.com/ThinalJaye" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Github size={20} /></a>
-              <a href="https://www.linkedin.com/in/thinal-jayamanna" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Linkedin size={20} /></a>
-              <a href="https://web.facebook.com/" target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-900 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 border border-gray-800"><Facebook size={20} /></a>
-            </div>
+          
           </div>
         </motion.div>
 

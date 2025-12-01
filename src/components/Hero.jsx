@@ -44,17 +44,15 @@ function Navbar() {
         
         <div className="lg:hidden"></div>
 
-        {/* PART 2: CENTER - Navigation Links with "LAWATA" (Subtle) RGB EFFECT */}
+        {/* PART 2: CENTER - Navigation Links with DARK BLUE CHASE EFFECT */}
         <div className="hidden md:block pointer-events-auto relative z-50">
-            {/* Border padding set to 1.5px for a fine line */}
             <div className="relative p-[1.5px] rounded-full overflow-hidden">
                 
                 {/* UPDATES HERE:
-                   - opacity-30: Increased slightly so it shows "tikak lawata" (visible but soft).
-                   - blur-[8px]: Keeps the glow smooth.
-                   - animate-[spin_8s...]: Smooth rotation.
+                   - Gradient: Changed to single blue color chasing light effect (#4C7AF4)
+                   - Opacity/Blur: Increased blur for smoother, subtler glow (Lawata)
                 */}
-                <div className="absolute inset-[-100%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FF0000_0%,#FFFF00_17%,#00FF00_33%,#00FFFF_50%,#0000FF_67%,#FF00FF_83%,#FF0000_100%)] opacity-30 blur-[8px]" />
+                <div className="absolute inset-[-100%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#4C7AF4_15%,transparent_100%)] opacity-40 blur-[10px]" />
 
                 {/* Inner Menu */}
                 <ul className="relative h-full w-full bg-black/80 backdrop-blur-2xl rounded-full flex items-center gap-1 px-3 py-2">
@@ -230,9 +228,9 @@ const Hero = () => {
               <TypeAnimation
                 sequence={[
                   'experiences.', 1000,
-                  'products.',    1000,
-                  'brands.',      1000,
-                  'solutions.',   1000
+                  'products.', 1000,
+                  'brands.', 1000,
+                  'solutions.', 1000
                 ]}
                 wrapper="span"
                 speed={50}
@@ -345,8 +343,8 @@ const Hero = () => {
         </motion.div>
         <span className="text-sm font-medium tracking-wide">Explore My Work</span>
       </motion.button>
-    </div>
-  );
+    </div>
+  );
 };
 
 export default Hero;

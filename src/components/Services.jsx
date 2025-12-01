@@ -25,7 +25,7 @@ const services = [
   }
 ];
 
-// --- RGB GLOW CARD COMPONENT ---
+// --- MODIFIED CARD COMPONENT ---
 const ServiceCard = ({ service, index }) => {
   const divRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -53,13 +53,14 @@ const ServiceCard = ({ service, index }) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="relative h-full rounded-2xl border border-gray-800 bg-gray-900 p-[2px] overflow-hidden group"
     >
-      {/* --- RGB SPOTLIGHT GLOW --- */}
+      {/* --- ASH/GRAY SPOTLIGHT GLOW (Changed Section) --- */}
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-2xl z-10"
         style={{
           opacity,
-          // මෙන්න මෙතන තමයි RGB පාට 3 මිශ්‍ර කරලා තියෙන්නේ (Cyan -> Purple -> Pink)
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(56, 189, 248, 0.8), rgba(168, 85, 247, 0.8), rgba(236, 72, 153, 0.8), transparent 50%)`,
+          // RGB වර්ණ ඉවත් කර සියුම් අළු/සුදු පැහැයක් (Ash Color) යෙදුවා
+          // rgba(255, 255, 255, 0.15) මගින් ඉතා සියුම් ආලෝකයක් ලබා දේ
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255, 255, 255, 0.15), transparent 40%)`,
         }}
       />
       
