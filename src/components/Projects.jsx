@@ -10,7 +10,7 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-// --- 2. GLOWING EFFECT COMPONENT ---
+// --- 2. GLOWING EFFECT COMPONENT (No Changes) ---
 const GlowingEffect = memo(({
   blur = 0,
   inactiveZone = 0.7,
@@ -157,7 +157,7 @@ const GlowingEffect = memo(({
 GlowingEffect.displayName = "GlowingEffect";
 
 
-// --- 3. PROJECT DATA ---
+// --- 3. PROJECT DATA (No changes here, images are already defined) ---
 const projects = [
   {
     id: 1,
@@ -165,7 +165,7 @@ const projects = [
     category: "WEB / SECURITY",
     desc: "A secure cloud storage system designed with client-side chunk-based encryption to enhance privacy and scalability using AWS S3.",
     tech: ["React.js", "Node.js", "AWS S3", "MongoDB"],
-    image: "/project1.png",
+    image: "/project1.png", // Make sure this image exists in public folder
     live: "https://trysafe.vercel.app/",
     github: "#",
     hasLive: true,
@@ -177,7 +177,7 @@ const projects = [
     category: "IOT / AI",
     desc: "A gesture-based fan control system providing touchless operation using Image Processing. (Top 5 - TCC2 Competition).",
     tech: ["Python", "OpenCV", "IoT"],
-    image: "/project2.jpg",
+    image: "/project2.jpg", // Make sure this image exists in public folder
     live: null,
     github: "#",
     hasLive: false,
@@ -189,7 +189,7 @@ const projects = [
     category: "MACHINE LEARNING",
     desc: "System to help users identify suitable tech roles based on their personality traits and skills using Python & Flask.",
     tech: ["Python", "Flask", "ML"],
-    image: "/project3.jpg",
+    image: "/project3.jpg", // Make sure this image exists in public folder
     live: "#",
     github: "#",
     hasLive: true,
@@ -215,14 +215,15 @@ const Projects = () => {
         </motion.div>
 
         {/* Grid Layout */}
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
-            <li key={project.id} className="min-h-[14rem] list-none relative group">
+            // Added 'group' here for hover effects on child elements
+            <li key={project.id} className="min-h-[14rem] list-none relative group h-full">
               
               {/* Card Container */}
               <div className="relative h-full rounded-3xl border border-gray-800 bg-black p-1">
                 
-                {/* GLOWING EFFECT (Now included directly) */}
+                {/* GLOWING EFFECT */}
                 <GlowingEffect
                   blur={0}
                   borderWidth={3}
@@ -234,35 +235,50 @@ const Projects = () => {
                 />
 
                 {/* Inner Content */}
-                <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-2xl bg-gray-900/90 p-6">
+                <div className="relative flex h-full flex-col justify-between gap-5 overflow-hidden rounded-2xl bg-gray-900/90 p-5">
                   
                   {/* Header: Icon & Links */}
-                  <div className="flex justify-between items-start">
-                    <div className="w-12 h-12 rounded-lg border border-gray-700 bg-gray-800 flex items-center justify-center">
+                  <div className="flex justify-between items-start relative z-10">
+                    <div className="w-10 h-10 rounded-lg border border-gray-700 bg-gray-800/80 backdrop-blur-sm flex items-center justify-center shadow-sm">
                       {project.icon}
                     </div>
-                    <div className="flex gap-3">
-                       <a href={project.github} className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors"><Github size={18} /></a>
-                       {project.hasLive && (
-                         <a href={project.live} target="_blank" rel="noreferrer" className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors"><ExternalLink size={18} /></a>
-                       )}
+                    <div className="flex gap-2">
+                        <a href={project.github} className="p-2 bg-gray-800/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-white transition-colors border border-gray-700/50 hover:border-gray-600"><Github size={16} /></a>
+                        {project.hasLive && (
+                          <a href={project.live} target="_blank" rel="noreferrer" className="p-2 bg-gray-800/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-white transition-colors border border-gray-700/50 hover:border-gray-600"><ExternalLink size={16} /></a>
+                        )}
                     </div>
                   </div>
 
+                  {/* ----------- NEW IMAGE SECTION ADDED HERE ----------- */}
+                  {/* We use the existing project.image data */}
+                  <div className="relative w-full h-44 mt-2 rounded-xl overflow-hidden border border-gray-800/50 group-hover:border-gray-700/80 transition-colors duration-300">
+                    {/* Image with hover zoom effect */}
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    />
+                    {/* Subtle dark overlay gradient so text remains readable if it overlaps later */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent pointer-events-none"></div>
+                  </div>
+                   {/* ----------- END IMAGE SECTION ----------- */}
+
+
                   {/* Middle: Title & Desc */}
-                  <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
-                    <p className="text-sm text-gray-400 leading-relaxed line-clamp-3">
+                  <div className="space-y-2 relative z-10">
+                    <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">{project.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed line-clamp-2">
                       {project.desc}
                     </p>
                   </div>
 
                   {/* Bottom: Tech Stack */}
-                  <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-gray-800">
+                  <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t border-gray-800/60 relative z-10">
                     {project.tech.map((t, i) => (
-                       <span key={i} className="px-2.5 py-1 text-[10px] uppercase font-medium bg-gray-800 text-gray-300 rounded-md border border-gray-700">
-                         {t}
-                       </span>
+                        <span key={i} className="px-2 py-0.5 text-[10px] uppercase font-semibold bg-gray-800/80 text-gray-300 rounded-full border border-gray-700/50">
+                          {t}
+                        </span>
                     ))}
                   </div>
 

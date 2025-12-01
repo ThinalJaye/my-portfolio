@@ -4,7 +4,7 @@ import { motion, useMotionTemplate, useMotionValue, useSpring, useScroll, useTra
 import { TypeAnimation } from 'react-type-animation';
 import { clsx } from "clsx"; 
 import { twMerge } from "tailwind-merge";
-import { useLenis } from 'lenis/react'; // 1. අලුත් Import එක
+import { useLenis } from 'lenis/react'; 
 
 // Brand Icons
 import { FaReact, FaJava, FaNodeJs, FaPython, FaDocker, FaPhp, FaLaravel } from "react-icons/fa";
@@ -15,39 +15,50 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+// --- CONFIGURATION DATA ---
+const iconConfigs = [
+  { Icon: FaReact, color: "cyan", size: 28, position: { top: "10%", left: "25%" }, depth: "close", delay: 0 },
+  { Icon: FaJava, color: "red", size: 24, position: { top: "12%", right: "30%" }, depth: "far", delay: 0.5 },
+  { Icon: FaNodeJs, color: "green", size: 32, position: { top: "30%", right: "10%" }, depth: "close", delay: 0.2 },
+  { Icon: FaPython, color: "blue", size: 26, position: { top: "55%", right: "5%" }, depth: "medium", delay: 0.8 },
+  { Icon: FaDocker, color: "blue", size: 30, position: { bottom: "20%", right: "12%" }, depth: "close", delay: 0.3 },
+  { Icon: FaPhp, color: "indigo", size: 22, position: { bottom: "10%", right: "35%" }, depth: "far", delay: 0.7 },
+  { Icon: SiTypescript, color: "blue", size: 20, position: { bottom: "5%", right: "50%" }, depth: "far", delay: 0.4 }, 
+  { Icon: SiMysql, color: "blue", size: 28, position: { bottom: "10%", left: "35%" }, depth: "medium", delay: 0.6 },
+  { Icon: SiMongodb, color: "green", size: 26, position: { bottom: "20%", left: "15%" }, depth: "medium", delay: 0.9 },
+  { Icon: SiJavascript, color: "yellow", size: 32, position: { bottom: "40%", left: "8%" }, depth: "close", delay: 0.1 },
+  { Icon: SiGraphql, color: "pink", size: 24, position: { top: "35%", left: "10%" }, depth: "far", delay: 0.5 },
+  { Icon: FaLaravel, color: "red", size: 28, position: { top: "15%", left: "15%" }, depth: "medium", delay: 0.3 },
+];
+
 // --- NAVBAR COMPONENT ---
 function Navbar() {
   const [active, setActive] = useState('Home');
-  const navItems = ['Home', 'About', 'Skills', 'Services', 'Projects', 'Process', 'Contact'];
+  const navItems = ['Home', 'About', 'Skills', 'Services', 'Projects',  'Contact'];
   
-  // 2. Lenis Instance එක ගන්නවා
   const lenis = useLenis();
 
-  // 3. Custom Smooth Scroll Function එක
   const handleNavClick = (e, item) => {
-    e.preventDefault(); // සාමාන්‍ය විදිහට පැනලා යන එක නවත්තනවා
+    e.preventDefault(); 
     
     const targetId = item === 'Home' ? '#home' : `#${item.toLowerCase()}`;
     const targetElement = document.querySelector(targetId);
 
     if (targetElement && lenis) {
       lenis.scrollTo(targetElement, {
-        offset: -80, // Navbar එකට යට නොවී තියෙන්න පොඩි ඉඩක් (Header height adjustment)
-        duration: 1.5, // යන වේගය (තත්පර 1.5)
-        easing: (t) => 1 - Math.pow(1 - t, 4), // "Quart Ease Out" Animation (හරිම Smooth)
+        offset: -80, 
+        duration: 1.5, 
+        easing: (t) => 1 - Math.pow(1 - t, 4), 
       });
       setActive(item);
     }
   };
 
-  // --- SCROLL SPY LOGIC ---
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
 
       for (const item of navItems) {
-        const sectionId = item === 'Home' ? '#home' : `#${item.toLowerCase()}`;
-        // Note: querySelector needs '#' but getElementById doesn't. Fixing ID logic:
         const idString = item === 'Home' ? 'home' : item.toLowerCase();
         const element = document.getElementById(idString);
 
@@ -66,7 +77,6 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navItems]);
 
-  // --- NAVBAR ANIMATIONS ---
   const { scrollY } = useScroll();
   const sideOpacity = useTransform(scrollY, [0, 100], [1, 0]);
   const sidePointerEvents = useTransform(scrollY, (y) => (y > 100 ? "none" : "auto"));
@@ -91,24 +101,32 @@ function Navbar() {
         
         <div className="lg:hidden"></div>
 
-        {/* CENTER - Navigation Links */}
+        {/* CENTER - Navigation Links (ENHANCED GLASS LOOK) */}
         <div className="hidden md:block pointer-events-auto relative z-50">
-            <div className="relative p-[1.5px] rounded-full overflow-hidden">
-                <div className="absolute inset-[-100%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#4C7AF4_15%,transparent_100%)] opacity-40 blur-[10px]" />
-                <ul className="relative h-full w-full bg-black/80 backdrop-blur-2xl rounded-full flex items-center gap-1 px-3 py-2">
+            <div className="relative p-[1.5px] rounded-full overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]">
+                {/* Rotating Border Gradient */}
+                <div className="absolute inset-[-100%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#4C7AF4_20%,transparent_100%)] opacity-70 blur-[8px]" />
+                
+                {/* UPDATED STYLES HERE:
+                   1. bg-black/20 (Was /50) -> More transparent
+                   2. shadow-[inset...] -> Added top rim light for 3D glass effect
+                   3. border-white/10 -> Subtle crisp edge
+                */}
+                <ul className="relative h-full w-full bg-black/20 backdrop-blur-3xl rounded-full flex items-center gap-1 px-3 py-2 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]">
                     {navItems.map((item) => (
                         <li key={item}>
                         <a 
                             href={item === 'Home' ? '#home' : `#${item.toLowerCase()}`} 
-                            onClick={(e) => handleNavClick(e, item)} // 4. Click Handler එක දැම්මා
+                            onClick={(e) => handleNavClick(e, item)}
                             onMouseEnter={() => setActive(item)} 
-                            className="relative px-5 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors block"
+                            className="relative px-5 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors block"
                         >
-                            <span className="relative z-10">{item}</span>
+                            <span className="relative z-10 mix-blend-overlay">{item}</span>
                             {active === item && (
                             <motion.div
                                 layoutId="active-nav"
-                                className="absolute inset-0 bg-white/10 rounded-full"
+                                // UPDATED ACTIVE STATE: Added subtle gradient and stronger glow
+                                className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent rounded-full border border-white/5 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             />
                             )}
@@ -139,7 +157,7 @@ function Navbar() {
 const Hero = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const lenis = useLenis(); // Hero එක ඇතුලෙත් Lenis ගන්නවා යට බටන් එකට
+  const lenis = useLenis(); 
 
   const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
   const smoothX = useSpring(mouseX, springConfig);
@@ -161,7 +179,6 @@ const Hero = () => {
     delay: Math.random() * 2
   }));
 
-  // Updated Scroll Function using Lenis
   const scrollToAbout = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection && lenis) {
@@ -182,22 +199,6 @@ const Hero = () => {
     y: [0, 8, 0],
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
   };
-
-  // Icon Configs
-  const iconConfigs = [
-    { Icon: FaReact, color: "cyan", size: 28, position: { top: "10%", left: "25%" }, depth: "close", delay: 0 },
-    { Icon: FaJava, color: "red", size: 24, position: { top: "12%", right: "30%" }, depth: "far", delay: 0.5 },
-    { Icon: FaNodeJs, color: "green", size: 32, position: { top: "30%", right: "10%" }, depth: "close", delay: 0.2 },
-    { Icon: FaPython, color: "blue", size: 26, position: { top: "55%", right: "5%" }, depth: "medium", delay: 0.8 },
-    { Icon: FaDocker, color: "blue", size: 30, position: { bottom: "20%", right: "12%" }, depth: "close", delay: 0.3 },
-    { Icon: FaPhp, color: "indigo", size: 22, position: { bottom: "10%", right: "35%" }, depth: "far", delay: 0.7 },
-    { Icon: SiTypescript, color: "blue", size: 20, position: { bottom: "5%", right: "50%" }, depth: "far", delay: 0.4 }, 
-    { Icon: SiMysql, color: "blue", size: 28, position: { bottom: "10%", left: "35%" }, depth: "medium", delay: 0.6 },
-    { Icon: SiMongodb, color: "green", size: 26, position: { bottom: "20%", left: "15%" }, depth: "medium", delay: 0.9 },
-    { Icon: SiJavascript, color: "yellow", size: 32, position: { bottom: "40%", left: "8%" }, depth: "close", delay: 0.1 },
-    { Icon: SiGraphql, color: "pink", size: 24, position: { top: "35%", left: "10%" }, depth: "far", delay: 0.5 },
-    { Icon: FaLaravel, color: "red", size: 28, position: { top: "15%", left: "15%" }, depth: "medium", delay: 0.3 },
-  ];
 
   return (
     <div 

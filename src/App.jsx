@@ -6,7 +6,7 @@ import 'lenis/dist/lenis.css';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import TechStack from './components/TechStack';
-import Process from './components/Process';
+// Process Component import එක ඉවත් කළා
 import Projects from './components/Projects';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -36,42 +36,37 @@ function App() {
           <Hero />
         </section>
 
-        {/* 2. About Me (මෙන්න මෙතනට ගෙනාවා Hero එකට පස්සේ) */}
+        {/* 2. About Me */}
         <section id="about" className="flex justify-center">
           <RevealOnScroll width="100%">
             <About />
           </RevealOnScroll>
         </section>
 
-        {/* 3. Skills / TechStack (ඊට පස්සේ Skills පෙන්නනවා) */}
+        {/* 3. Skills / TechStack */}
         <section id="skills" className="flex justify-center">
           <RevealOnScroll width="100%">
             <TechStack />
           </RevealOnScroll>
         </section>
 
-        {/* 4. Services (ඊට පස්සේ Services) */}
+        {/* 4. Services */}
         <section id="services" className="flex justify-center">
           <RevealOnScroll width="100%">
             <Services />
           </RevealOnScroll>
         </section>
         
-        {/* 5. Projects (වැදගත්ම කොටස මැද හරියට ගත්තා) */}
+        {/* 5. Projects */}
         <section id="projects" className="flex justify-center">
           <RevealOnScroll width="100%">
             <Projects />
           </RevealOnScroll>
         </section>
 
-        {/* 6. Process */}
-        <section id="process" className="flex justify-center">
-          <RevealOnScroll width="100%">
-            <Process />
-          </RevealOnScroll>
-        </section>
+        {/* (Process Section එක මෙතනින් ඉවත් කළා) */}
 
-        {/* 7. Contact */}
+        {/* 6. Contact */}
         <section id="contact" className="flex justify-center">
           <RevealOnScroll width="100%">
             <Contact />
