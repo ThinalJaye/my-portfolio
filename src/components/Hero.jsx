@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, ArrowRight, Github, Linkedin, Facebook, ChevronDown, Download } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue, useSpring, useScroll, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { clsx } from "clsx"; 
 import { twMerge } from "tailwind-merge";
+import { useLenis } from 'lenis/react'; // 1. අලුත් Import එක
 
 // Brand Icons
 import { FaReact, FaJava, FaNodeJs, FaPython, FaDocker, FaPhp, FaLaravel } from "react-icons/fa";
@@ -16,10 +17,56 @@ function cn(...inputs) {
 
 // --- NAVBAR COMPONENT ---
 function Navbar() {
-  const [active, setActive] = useState(null);
-  const navItems = ['Home', 'Projects', 'Services', 'Skills', 'Process', 'About', 'Contact'];
+  const [active, setActive] = useState('Home');
+  const navItems = ['Home', 'About', 'Skills', 'Services', 'Projects', 'Process', 'Contact'];
+  
+  // 2. Lenis Instance එක ගන්නවා
+  const lenis = useLenis();
 
-  // --- SCROLL LOGIC ---
+  // 3. Custom Smooth Scroll Function එක
+  const handleNavClick = (e, item) => {
+    e.preventDefault(); // සාමාන්‍ය විදිහට පැනලා යන එක නවත්තනවා
+    
+    const targetId = item === 'Home' ? '#home' : `#${item.toLowerCase()}`;
+    const targetElement = document.querySelector(targetId);
+
+    if (targetElement && lenis) {
+      lenis.scrollTo(targetElement, {
+        offset: -80, // Navbar එකට යට නොවී තියෙන්න පොඩි ඉඩක් (Header height adjustment)
+        duration: 1.5, // යන වේගය (තත්පර 1.5)
+        easing: (t) => 1 - Math.pow(1 - t, 4), // "Quart Ease Out" Animation (හරිම Smooth)
+      });
+      setActive(item);
+    }
+  };
+
+  // --- SCROLL SPY LOGIC ---
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+
+      for (const item of navItems) {
+        const sectionId = item === 'Home' ? '#home' : `#${item.toLowerCase()}`;
+        // Note: querySelector needs '#' but getElementById doesn't. Fixing ID logic:
+        const idString = item === 'Home' ? 'home' : item.toLowerCase();
+        const element = document.getElementById(idString);
+
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetBottom = offsetTop + element.offsetHeight;
+
+          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+            setActive(item);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [navItems]);
+
+  // --- NAVBAR ANIMATIONS ---
   const { scrollY } = useScroll();
   const sideOpacity = useTransform(scrollY, [0, 100], [1, 0]);
   const sidePointerEvents = useTransform(scrollY, (y) => (y > 100 ? "none" : "auto"));
@@ -29,7 +76,7 @@ function Navbar() {
     <div className="fixed top-6 inset-x-0 z-50 px-4 md:px-8 flex justify-center pointer-events-none">
       <nav className="w-full max-w-7xl flex items-center justify-between">
         
-        {/* PART 1: LEFT - Email Section */}
+        {/* LEFT - Email */}
         <motion.div 
           style={{ opacity: sideOpacity, y: sideY, pointerEvents: sidePointerEvents }}
           className="hidden lg:flex items-center gap-3 group cursor-pointer pointer-events-auto"
@@ -44,24 +91,17 @@ function Navbar() {
         
         <div className="lg:hidden"></div>
 
-        {/* PART 2: CENTER - Navigation Links with DARK BLUE CHASE EFFECT */}
+        {/* CENTER - Navigation Links */}
         <div className="hidden md:block pointer-events-auto relative z-50">
             <div className="relative p-[1.5px] rounded-full overflow-hidden">
-                
-                {/* UPDATES HERE:
-                   - Gradient: Changed to single blue color chasing light effect (#4C7AF4)
-                   - Opacity/Blur: Increased blur for smoother, subtler glow (Lawata)
-                */}
                 <div className="absolute inset-[-100%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#4C7AF4_15%,transparent_100%)] opacity-40 blur-[10px]" />
-
-                {/* Inner Menu */}
                 <ul className="relative h-full w-full bg-black/80 backdrop-blur-2xl rounded-full flex items-center gap-1 px-3 py-2">
                     {navItems.map((item) => (
                         <li key={item}>
                         <a 
-                            href={item === 'Home' ? '#' : `#${item.toLowerCase()}`} 
-                            onMouseEnter={() => setActive(item)}
-                            onMouseLeave={() => setActive(null)}
+                            href={item === 'Home' ? '#home' : `#${item.toLowerCase()}`} 
+                            onClick={(e) => handleNavClick(e, item)} // 4. Click Handler එක දැම්මා
+                            onMouseEnter={() => setActive(item)} 
                             className="relative px-5 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors block"
                         >
                             <span className="relative z-10">{item}</span>
@@ -79,7 +119,7 @@ function Navbar() {
             </div>
         </div>
 
-        {/* PART 3: RIGHT - Download CV Button */}
+        {/* RIGHT - Download CV */}
         <motion.a
           style={{ opacity: sideOpacity, y: sideY, pointerEvents: sidePointerEvents }}
           href="/cv.pdf"
@@ -95,10 +135,11 @@ function Navbar() {
   );
 }
 
+// --- HERO COMPONENT ---
 const Hero = () => {
-  // --- MOUSE ANIMATION SETUP ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const lenis = useLenis(); // Hero එක ඇතුලෙත් Lenis ගන්නවා යට බටන් එකට
 
   const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
   const smoothX = useSpring(mouseX, springConfig);
@@ -110,7 +151,7 @@ const Hero = () => {
     mouseY.set(clientY - top);
   }
   
-  // Stars Generation
+  // Stars Logic
   const stars = [...Array(50)].map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
@@ -120,10 +161,15 @@ const Hero = () => {
     delay: Math.random() * 2
   }));
 
-  const scrollToProjects = () => {
-    const projectsSection = document.getElementById('projects');
-    if (projectsSection) {
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
+  // Updated Scroll Function using Lenis
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection && lenis) {
+        lenis.scrollTo(aboutSection, {
+            offset: -80,
+            duration: 1.5,
+            easing: (t) => 1 - Math.pow(1 - t, 4),
+        });
     }
   };
 
@@ -137,7 +183,7 @@ const Hero = () => {
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
   };
 
-  // --- ICON POSITIONS ---
+  // Icon Configs
   const iconConfigs = [
     { Icon: FaReact, color: "cyan", size: 28, position: { top: "10%", left: "25%" }, depth: "close", delay: 0 },
     { Icon: FaJava, color: "red", size: 24, position: { top: "12%", right: "30%" }, depth: "far", delay: 0.5 },
@@ -158,8 +204,6 @@ const Hero = () => {
       className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white flex flex-col relative overflow-hidden group"
       onMouseMove={handleMouseMove}
     >
-      
-      {/* --- MOUSE SPOTLIGHT EFFECT --- */}
       <motion.div
         className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-500 group-hover:opacity-100"
         style={{
@@ -173,7 +217,6 @@ const Hero = () => {
         }}
       />
 
-      {/* --- BRIGHTER STARS LAYER --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
           <motion.div
@@ -186,31 +229,19 @@ const Hero = () => {
               height: `${star.size}px`,
               boxShadow: '0 0 6px 1px rgba(255, 255, 255, 0.6)'
             }}
-            animate={{ 
-              opacity: [0.3, 1, 0.3], 
-              scale: [1, 1.2, 1] 
-            }}
-            transition={{
-              duration: star.duration,
-              repeat: Infinity,
-              delay: star.delay,
-              ease: "easeInOut"
-            }}
+            animate={{ opacity: [0.3, 1, 0.3], scale: [1, 1.2, 1] }}
+            transition={{ duration: star.duration, repeat: Infinity, delay: star.delay, ease: "easeInOut" }}
           />
         ))}
       </div>
 
-      {/* --- DARK GRADIENTS --- */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-900/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-      {/* --- NAVBAR --- */}
       <Navbar />
 
-      {/* Main Content */}
       <main className="flex-grow w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10 pt-24 md:pt-0">
         
-        {/* LEFT SIDE */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -226,12 +257,7 @@ const Hero = () => {
             Building digital <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
               <TypeAnimation
-                sequence={[
-                  'experiences.', 1000,
-                  'products.', 1000,
-                  'brands.', 1000,
-                  'solutions.', 1000
-                ]}
+                sequence={['experiences.', 1000, 'products.', 1000, 'brands.', 1000, 'solutions.', 1000]}
                 wrapper="span"
                 speed={50}
                 repeat={Infinity}
@@ -254,7 +280,6 @@ const Hero = () => {
             >
               Let's Talk <ArrowRight size={18} />
             </motion.a>
-            
             <div className="flex gap-4">
                <motion.a whileHover={{ y: -5 }} href="https://github.com/ThinalJaye" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Github size={20} /></motion.a>
                <motion.a whileHover={{ y: -5 }} href="https://www.linkedin.com/in/thinal-jayamanna" target="_blank" className="p-4 border border-gray-800 rounded-full hover:bg-gray-800 hover:text-white text-gray-400 transition-all"><Linkedin size={20} /></motion.a>
@@ -263,7 +288,6 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -271,20 +295,12 @@ const Hero = () => {
           className="order-1 md:order-2 flex justify-center items-center relative py-10"
         >
           <div className="relative w-[350px] h-[350px] md:w-[550px] md:h-[550px] flex justify-center items-center">
-            
             <div className="absolute inset-0 bg-purple-600/10 rounded-full blur-3xl animate-pulse"></div>
-            
             <div className="relative w-[280px] h-[280px] md:w-[350px] md:h-[350px] z-10 flex justify-center items-center">
-               <img 
-                 src="/profile.png" 
-                 alt="Thinal Jayamanna" 
-                 className="w-full h-full object-contain drop-shadow-2xl" 
-               />
+               <img src="/profile.png" alt="Thinal Jayamanna" className="w-full h-full object-contain drop-shadow-2xl" />
             </div>
-
             {iconConfigs.map((config, index) => {
               const { Icon, color, size, position, depth, delay } = config;
-              
               const colorStyles = {
                 cyan: { text: "text-cyan-400", border: { close: "border-cyan-500/50", medium: "border-cyan-500/40", far: "border-cyan-500/30" }, shadow: { close: "shadow-lg shadow-cyan-500/40", medium: "shadow-md shadow-cyan-500/30", far: "shadow shadow-cyan-500/20" } },
                 red: { text: depth === "close" ? "text-red-500" : "text-red-400", border: { close: "border-red-500/50", medium: "border-red-500/40", far: "border-red-500/30" }, shadow: { close: "shadow-lg shadow-red-500/40", medium: "shadow-md shadow-red-500/30", far: "shadow shadow-red-500/20" } },
@@ -294,57 +310,41 @@ const Hero = () => {
                 yellow: { text: "text-yellow-400", border: { close: "border-yellow-500/50", medium: "border-yellow-500/40", far: "border-yellow-500/30" }, shadow: { close: "shadow-lg shadow-yellow-500/40", medium: "shadow-md shadow-yellow-500/30", far: "shadow shadow-yellow-500/20" } },
                 pink: { text: "text-pink-500", border: { close: "border-pink-500/50", medium: "border-pink-500/40", far: "border-pink-500/30" }, shadow: { close: "shadow-lg shadow-pink-500/40", medium: "shadow-md shadow-pink-500/30", far: "shadow shadow-pink-500/20" } }
               };
-
               const depthStyles = {
                 close: { opacity: 1, zIndex: 30, scale: 1, padding: "p-3.5" },
                 medium: { opacity: 0.85, zIndex: 25, scale: 0.9, padding: "p-3" },
                 far: { opacity: 0.7, zIndex: 20, scale: 0.75, padding: "p-2.5" }
               };
-
               const style = depthStyles[depth];
               const colorStyle = colorStyles[color];
               const duration = 3 + (index * 0.3) % 2;
-
               return (
                 <motion.div
                   key={index}
                   animate={floatAnimation(duration, delay)}
                   className={`absolute ${style.padding} bg-gray-900/90 backdrop-blur-sm rounded-full ${colorStyle.border[depth]} border ${colorStyle.shadow[depth]}`}
-                  style={{
-                    ...position,
-                    opacity: style.opacity,
-                    transform: `scale(${style.scale})`,
-                    zIndex: style.zIndex,
-                  }}
+                  style={{ ...position, opacity: style.opacity, transform: `scale(${style.scale})`, zIndex: style.zIndex }}
                 >
                   <Icon size={size} className={colorStyle.text} />
                 </motion.div>
               );
             })}
-
           </div>
         </motion.div>
-
       </main>
 
-      {/* Scroll Down Indicator */}
       <motion.button
-        onClick={scrollToProjects}
+        onClick={scrollToAbout}
         animate={bounceAnimation}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 hover:text-gray-300 transition-colors z-30 cursor-pointer group"
-        aria-label="Scroll to projects"
       >
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="flex items-center justify-center"
-        >
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="flex items-center justify-center">
           <ChevronDown size={24} className="text-[#f97316] group-hover:text-[#fb923c] transition-colors" />
         </motion.div>
         <span className="text-sm font-medium tracking-wide">Explore My Work</span>
       </motion.button>
-    </div>
-  );
+    </div>
+  );
 };
 
 export default Hero;

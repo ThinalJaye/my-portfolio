@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import Lenis from 'lenis';
+import React from 'react';
+import { ReactLenis } from 'lenis/react';
 import 'lenis/dist/lenis.css';
 
 // Components
@@ -10,92 +10,78 @@ import Process from './components/Process';
 import Projects from './components/Projects';
 import About from './components/About';
 import Contact from './components/Contact';
-import Footer from './components/Footer'; // 1. Footer එක Import කළා
+import Footer from './components/Footer';
 
 // Animation Component
 import RevealOnScroll from './components/RevealOnScroll';
 
 function App() {
 
-  // Smooth Scroll Setup
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    });
-
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
+  // Smooth Scroll Settings
+  const lenisOptions = {
+    duration: 1.5,
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+  };
 
   return (
-    <div className="min-h-screen w-full bg-black text-white selection:bg-purple-500 selection:text-white">
+    <ReactLenis root options={lenisOptions}>
       
-      {/* Hero Section */}
-      <section id="home">
-        <Hero />
-      </section>
+      <div className="min-h-screen w-full bg-black text-white selection:bg-purple-500 selection:text-white">
+        
+        {/* 1. Hero Section */}
+        <section id="home">
+          <Hero />
+        </section>
 
-      {/* Services Section */}
-      <section id="services" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <Services />
-        </RevealOnScroll>
-      </section>
-      
-      {/* Skills Section */}
-      <section id="skills" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <TechStack />
-        </RevealOnScroll>
-      </section>
+        {/* 2. About Me (මෙන්න මෙතනට ගෙනාවා Hero එකට පස්සේ) */}
+        <section id="about" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <About />
+          </RevealOnScroll>
+        </section>
 
-      {/* Process Section */}
-      <section id="process" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <Process />
-        </RevealOnScroll>
-      </section>
+        {/* 3. Skills / TechStack (ඊට පස්සේ Skills පෙන්නනවා) */}
+        <section id="skills" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <TechStack />
+          </RevealOnScroll>
+        </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <Projects />
-        </RevealOnScroll>
-      </section>
+        {/* 4. Services (ඊට පස්සේ Services) */}
+        <section id="services" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <Services />
+          </RevealOnScroll>
+        </section>
+        
+        {/* 5. Projects (වැදගත්ම කොටස මැද හරියට ගත්තා) */}
+        <section id="projects" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <Projects />
+          </RevealOnScroll>
+        </section>
 
-      {/* About Section */}
-      <section id="about" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <About />
-        </RevealOnScroll>
-      </section>
-      
-      {/* Contact Section */}
-      <section id="contact" className="flex justify-center">
-        <RevealOnScroll width="100%">
-          <Contact />
-        </RevealOnScroll>
-      </section>
+        {/* 6. Process */}
+        <section id="process" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <Process />
+          </RevealOnScroll>
+        </section>
 
-      {/* 2. Footer Section (අන්තිමටම එකතු කළා) */}
-      <Footer />
+        {/* 7. Contact */}
+        <section id="contact" className="flex justify-center">
+          <RevealOnScroll width="100%">
+            <Contact />
+          </RevealOnScroll>
+        </section>
 
-    </div>
+        <Footer />
+
+      </div>
+    </ReactLenis>
   );
 }
 
